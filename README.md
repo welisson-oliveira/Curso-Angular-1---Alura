@@ -2,5 +2,4 @@
 Curso Angular 1: crie webapps poderosas
 
 config and run:
-  npm install
-  npm start
+  npm install && npm start
