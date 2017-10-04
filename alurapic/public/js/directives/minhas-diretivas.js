@@ -1,0 +1,79 @@
+angular.module('minhasDiretivas', [])
+    .directive('meuPainel', function () {
+
+        //Directive Definition Object
+        var ddo = {};
+
+        //uma directiva pode ser usada como [E]lemento, [A]tributo, [C]omentario.
+        ddo.restrict = "AE";
+
+        //ativa a transclusão, para que o angular preserve o conteúdo original da diretiva.
+        ddo.transclude = true;
+
+        //utilizado para isolar o escopo da diretiva, captura o titulo passado pela diretiva.
+        //O uso apenas de @ é possível somente se os dois nomes são iguais.
+        ddo.scope = {
+            titulo: '@'
+        };
+
+        ddo.templateUrl = 'js/directives/meu-painel.html';
+
+        return ddo;
+    }).directive('minhaFoto', function () {
+        var ddo = {};
+        ddo.restrict = "AE";
+        ddo.scope = {
+            url: '@',
+            titulo: '@'
+        };
+        ddo.templateUrl = 'js/directives/minha-foto.html';
+        //ddo.template = '<img class="img-responsive center-block" src="{{url}}" alt="{{titulo}}">';
+        return ddo;
+    }).directive('meuBotaoPerigo', function () {
+        var ddo = {};
+        ddo.restrict = "E";
+        ddo.scope = {
+            nome: '@',
+            acao: '&'
+        };
+        ddo.template = '<button class="btn btn-danger btn-block" ng-click="acao()">{{nome}}</button>';
+        return ddo;
+    }).directive('meuFocus', function(){
+        var ddo = {};
+        ddo.restrict = "A";
+        
+        ddo.link = function(scope, element){
+
+            //ouve o evento 'fotoCadastrada' que será disparada pelo controller foto-controller.js
+            scope.$on('fotoCadastrada', function(){
+                element[0].focus();
+            });
+        };
+        return ddo;
+        
+        //usado com watcher
+        // ddo.scope = {
+        //     focado : '='
+        // };
+        // ddo.link = function(scope, element){
+        //     scope.$watch('focado', function(){
+        //         if(scope.focado){
+        //             element[0].focus();
+        //             scope.focado = false;
+        //         }
+        //     });
+        // };
+        // return ddo;
+    }).directive('meusTitulos', function(){
+        var ddo = {};
+        ddo.restrict = 'E';
+        ddo.template = '<ul><li ng-repeat="titulo in titulos">{{titulo}}</li></ul>';
+        ddo.controller = function($scope, recursoFoto){
+            recursoFoto.query(function(fotos){
+                $scope.titulos = fotos.map(function(foto){
+                    return foto.titulo;
+                });
+            });
+        };
+        return ddo;
+    });
